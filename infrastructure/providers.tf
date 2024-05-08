@@ -6,7 +6,9 @@ terraform {
       source = "hashicorp/aws"
     }
   }
-  backend "s3" {
-    region = var.region
-  }
+  backend "s3" {}
+}
+
+provider "aws" {
+  region = var.region
 }
