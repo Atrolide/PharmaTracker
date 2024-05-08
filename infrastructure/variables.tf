@@ -1,4 +1,4 @@
 variable "region" {
-  type = string
+  type        = string
   description = "Region where the resources are deployed to"
 }
