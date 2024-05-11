@@ -27,3 +27,6 @@ terraform.rc
 
 # Ignore HCL lock, normally should be included
 .terraform.lock.hcl
+
+# Ignore python cache
+__pychache__
