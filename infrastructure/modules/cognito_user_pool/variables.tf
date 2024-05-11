@@ -26,3 +26,11 @@ variable "require_uppercase" {
   type = bool
 }
 
+variable "cognito_domain_name" {
+  type = string
+}
+
+variable "temporary_password_validity_days" {
+  type = number
+  default = 7
+}
