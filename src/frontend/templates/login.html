@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Root Page</title>
+    <title>Login</title>
     <link rel="stylesheet" href="../static/css/styles.css"> <!-- Linking the CSS file -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <!-- New font link -->
@@ -17,8 +17,17 @@
 </head>
 
 <body>
-    <h1>Welcome to the Root Page!</h1>
-    <p>This is a dynamic page rendered with Jinja2.</p>
+    <div class="container">
+        <h2>Login</h2>
+        <form action="/submit-login" method="post">
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div id="error-section"></div>
+        <a href="/register" class="register-link">
+            Don't have an account?<br>Sign up here
+        </a>
 </body>
 
 </html>
