@@ -5,29 +5,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../static/css/styles.css"> <!-- Linking the CSS file -->
+    <link rel="stylesheet" href="../static/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <!-- New font link -->
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            /* Using Poppins font */
+           
         }
     </style>
 </head>
 
-<body>
+<body class="{% if error_message %}error-message-present{% endif %}">
     <div class="container">
         <h2>Login</h2>
-        <form action="/submit-login" method="post">
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
+        <form action="/submit-login" method="post" enctype="multipart/form-data">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
-        <div id="error-section"></div>
+        
+        {% if error_message %}
+        <div id="error-section">{{ error_message }}</div>
+        {% endif %}
         <a href="/register" class="register-link">
             Don't have an account?<br>Sign up here
         </a>
+    </div>
 </body>
 
 </html>

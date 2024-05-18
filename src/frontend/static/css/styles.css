@@ -73,9 +73,20 @@ button {
 }
 
 #error-section {
-    margin-top: 30px;
-    color: red;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    color: #d3142d;
+    background-color: #cc8b93;
+    display: none; /* Hide by default */
 }
+
+/* Display the error section when there is an error message */
+.error-message-present #error-section {
+    display: block;
+}
+
+
 
 
 .register-link,

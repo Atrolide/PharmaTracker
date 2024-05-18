@@ -1,11 +1,13 @@
 """Main entrypoint for the app"""
 
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import uvicorn
+
+from modules.models.inputs.app_inputs import LoginInput
 
 
 @asynccontextmanager
@@ -16,15 +18,9 @@ async def lifespan(app: FastAPI):
     print("Application is shutting down")
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, docs_url="/")
 templates = Jinja2Templates(directory="src/frontend/templates")
 app.mount("/static", StaticFiles(directory="src/frontend/static"), name="static")
-
-
-@app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    """Returns a simple message indicating the root endpoint is working."""
-    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/login", response_class=HTMLResponse)
@@ -37,6 +33,20 @@ async def read_login(request: Request):
 async def read_register(request: Request):
     """Displays the registration page."""
     return templates.TemplateResponse("register.html", {"request": request})
+
+
+@app.post("/submit-login", response_class=HTMLResponse)
+async def submit_login(
+    request: Request, email: str = Form(...), password: str = Form(...)
+):
+    """Handles login submission."""
+    login_data = LoginInput(email=email, password=password)
+    if login_data.password == "aaa":
+        return templates.TemplateResponse("index.html", {"request": request})
+    else:
+        return templates.TemplateResponse(
+            "login.html", {"request": request, "error_message": "Incorrect password"}
+        )
 
 
 def main():
