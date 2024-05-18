@@ -4,7 +4,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
+from starlette import status
 import uvicorn
 
 from modules.models.inputs.app_inputs import LoginInput
@@ -42,10 +43,13 @@ async def submit_login(
     """Handles login submission."""
     login_data = LoginInput(email=email, password=password)
     if login_data.password == "aaa":
-        return templates.TemplateResponse("index.html", {"request": request})
+        # Redirect to dashboard after successful login
+        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     else:
         return templates.TemplateResponse(
-            "login.html", {"request": request, "error_message": "Incorrect password"}
+            "login.html",
+            {"request": request, "error_message": "Incorrect password"},
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
 
 
