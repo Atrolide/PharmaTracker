@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel
 
-
+#TODO: #3 Add validators for each class
 class LoginInput(BaseModel):
     """Input model for user login"""
 

@@ -9,16 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="{% if error_message %}error-message-present{% endif %}">
     <div class="container">
         <h2>Register</h2>
-        <form action="/submit-register" method="post">
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+        <form action="/submit-register" method="post" enctype="multipart/form-data">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password"
+                required>
             <button type="submit">Register</button>
         </form>
-        <div id="error-section"></div> <!-- Error section -->
+
+        {% if error_message %}
+        <div id="error-section">{{ error_message }}</div>
+        {% endif %}
         <a href="/login" class="login-link">
             Already have an account?<br>
             Sign in here

@@ -1,14 +1,13 @@
 """Main entrypoint for the app"""
 
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
-from starlette import status
 import uvicorn
 
-from modules.models.inputs.app_inputs import LoginInput
+from modules.models.inputs.app_inputs import LoginInput, RegisterInput
 
 
 @asynccontextmanager
@@ -42,6 +41,7 @@ async def submit_login(
 ):
     """Handles login submission."""
     login_data = LoginInput(email=email, password=password)
+    #TODO: Incorporate try-except block. Invoke congito auth method
     if login_data.password == "aaa":
         # Redirect to dashboard after successful login
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
@@ -51,6 +51,29 @@ async def submit_login(
             {"request": request, "error_message": "Incorrect password"},
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
+
+
+@app.post("/submit-register", response_class=HTMLResponse)
+async def submit_register(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+    confirm_password: str = Form(...),
+):
+    """Handles login submission."""
+    register_data = RegisterInput(
+        email=email, password=password, confirm_password=confirm_password
+    )
+    print(register_data)
+    if register_data.password != register_data.confirm_password:
+        #TODO: Incorporate try-except block. Invoke congito auth method
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error_message": "Passwords do not match"},
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
+    else:
+        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
 
 
 def main():
