@@ -30,3 +30,8 @@ terraform.rc
 
 # Ignore python cache
 __pychache__
+.mypy_cache
+
+# Ignore .env .venv
+.env
+.venv

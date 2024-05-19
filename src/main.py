@@ -7,11 +7,11 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
 import uvicorn
 
-from modules.models.inputs.app_inputs import LoginInput, RegisterInput
+from src.modules.models.inputs.app_inputs import LoginInput, RegisterInput
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI):  # pylint: disable=W0613, W0621
     """Manages the startup and shutdown of the FastAPI application."""
     print("Application has started")
     yield
@@ -41,7 +41,7 @@ async def submit_login(
 ):
     """Handles login submission."""
     login_data = LoginInput(email=email, password=password)
-    #TODO: Incorporate try-except block. Invoke congito auth method
+    # TODO: Incorporate try-except block. Invoke congito auth method
     if login_data.password == "aaa":
         # Redirect to dashboard after successful login
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
@@ -66,7 +66,7 @@ async def submit_register(
     )
     print(register_data)
     if register_data.password != register_data.confirm_password:
-        #TODO: Incorporate try-except block. Invoke congito auth method
+        # TODO: Incorporate try-except block. Invoke congito auth method
         return templates.TemplateResponse(
             "register.html",
             {"request": request, "error_message": "Passwords do not match"},
