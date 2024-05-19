@@ -43,16 +43,22 @@ async def submit_login(
     request: Request, email: str = Form(...), password: str = Form(...)
 ):
     """Handles login submission."""
-    login_data = LoginInput(email=email, password=password)
-    # TODO: Incorporate try-except block. Invoke congito auth method
-    if login_data.password == "aaa":
-        # Redirect to dashboard after successful login
-        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
-    else:
+    try:
+        login_data = LoginInput(email=email, password=password)
+        if login_data.password == "aaa":
+            # Redirect to dashboard after successful login
+            return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+        else:
+            return templates.TemplateResponse(
+                "login.html",
+                {"request": request, "error_message": "Incorrect password"},
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+    except ValueError as val_err:
         return templates.TemplateResponse(
             "login.html",
-            {"request": request, "error_message": "Incorrect password"},
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            {"request": request, "error_message": str(val_err.errors()[0]["msg"])}, #pylint: disable=E1101
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
 
 
