@@ -1,9 +1,9 @@
 """Module for app inputs"""
+
 import re
 from pydantic import BaseModel, model_validator
 
 
-# TODO: #3 Add validators for each class
 class LoginInput(BaseModel):
     """Input model for user login"""
 
@@ -13,7 +13,9 @@ class LoginInput(BaseModel):
     @model_validator(mode="after")
     def check_email_regex(self) -> "LoginInput":
         """Model validator for if email matches the regex"""
-        if not re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", self.email):
+        if not re.match(
+            r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", self.email
+        ):
             raise ValueError("Email does not match the required format.")
         return self
 
