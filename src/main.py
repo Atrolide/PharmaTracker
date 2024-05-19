@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 import uvicorn
 
 from src.modules.models.inputs.app_inputs import LoginInput, RegisterInput
+from src.modules.services.aws.cognito_service import CognitoClient
 
 
 @asynccontextmanager
@@ -21,6 +22,8 @@ async def lifespan(app: FastAPI):  # pylint: disable=W0613, W0621
 app = FastAPI(lifespan=lifespan, docs_url="/")
 templates = Jinja2Templates(directory="src/frontend/templates")
 app.mount("/static", StaticFiles(directory="src/frontend/static"), name="static")
+
+cognito_client = CognitoClient()
 
 
 @app.get("/login", response_class=HTMLResponse)
@@ -60,20 +63,32 @@ async def submit_register(
     password: str = Form(...),
     confirm_password: str = Form(...),
 ):
-    """Handles login submission."""
-    register_data = RegisterInput(
-        email=email, password=password, confirm_password=confirm_password
-    )
-    print(register_data)
-    if register_data.password != register_data.confirm_password:
-        # TODO: Incorporate try-except block. Invoke congito auth method
+    """Handles user account creation"""
+    try:
+        register_input = RegisterInput(
+            email=email, password=password, confirm_password=confirm_password
+        )
+
+        # Directly attempt to register the user
+        await cognito_client.create_user_account(
+            register_input.email, register_input.password
+        )
+
+        # If registration is successful, redirect to success page
+        return templates.TemplateResponse("success.html", {"request": request})
+    except ValueError as val_err:
         return templates.TemplateResponse(
             "register.html",
-            {"request": request, "error_message": "Passwords do not match"},
+            {"request": request, "error_message": str(val_err.errors()[0]["msg"])}, #pylint: disable=E1101
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
-    else:
-        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+    except Exception as err:
+        # Handle unexpected errors
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error_message": f"An unexpected error occurred. {err}"},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
 
 def main():

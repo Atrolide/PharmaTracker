@@ -13,6 +13,7 @@ class BaseAwsSettings(BaseSettings):
 
     aws_access_key_id: str | None = os.getenv("AWS_ACCESS_KEY_ID")
     aws_secret_access_key: str | None = os.getenv("AWS_SECRET_ACCESS_KEY")
+    aws_region: str | None = os.getenv("AWS_REGION")
 
     model_config = SettingsConfigDict(case_sensitive=True)
 

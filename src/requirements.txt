@@ -3,3 +3,4 @@ uvicorn
 pydantic
 pydantic-settings
 python-dotenv
+boto3
