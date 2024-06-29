@@ -4,7 +4,8 @@ PharmaTracker is a cloud native web application created for pharmacies or privat
 
 1. Builds the image
 ```
-./build/build.sh
+cd build
+./build.sh
 ```
 2. Runs the container
 ```

@@ -1,7 +1,8 @@
 resource "aws_cognito_user_pool" "pharma_tracker_pool" {
-  name = var.pool_name
-
-  username_attributes = ["email"]
+  name                     = var.pool_name
+  auto_verified_attributes = ["email"] # Enables self email verification
+  username_attributes      = ["email"]
+  mfa_configuration        = "OFF"
 
   email_configuration {
     email_sending_account = "COGNITO_DEFAULT"
@@ -13,27 +14,13 @@ resource "aws_cognito_user_pool" "pharma_tracker_pool" {
     email_subject_by_link = "Verify your email for PharmaTracker"
   }
   password_policy {
-    minimum_length    = var.minimum_length
-    require_lowercase = var.require_lowercase
-    require_numbers   = var.require_numbers
-    require_symbols   = var.require_symbols
-    require_uppercase = var.require_uppercase
+    minimum_length                   = var.minimum_length
+    require_lowercase                = var.require_lowercase
+    require_numbers                  = var.require_numbers
+    require_symbols                  = var.require_symbols
+    require_uppercase                = var.require_uppercase
     temporary_password_validity_days = var.temporary_password_validity_days
   }
-}
-
-resource "aws_cognito_user_group" "users" {
-  name         = "users"
-  user_pool_id = aws_cognito_user_pool.pharma_tracker_pool.id
-
-  description = "Group for regular users"
-}
-
-resource "aws_cognito_user_group" "admins" {
-  name         = "admins"
-  user_pool_id = aws_cognito_user_pool.pharma_tracker_pool.id
-
-  description = "Group for administrators"
 }
 
 resource "aws_cognito_user_pool_client" "pharma_tracker_pool_client" {
