@@ -52,17 +52,24 @@ async def read_register(request: Request):
 
 @app.post("/submit-login", response_class=HTMLResponse)
 async def submit_login(
-    request: Request, email: str = Form(...), password: str = Form(...)
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...)
 ) -> RedirectResponse or templates.TemplateResponse:  # type: ignore
     """Handles login submission."""
     try:
-        login_input = LoginInput(email=email, password=password)
+        login_input = LoginInput(
+            email=email, password=password
+            )
+        
         response = await cognito_client.auth_user(
             login_input.email, login_input.password
         )
+        
         if response.get("AuthenticationResult", {}).get("AccessToken"):
             logger.info({"message": "Login successfull", "status_code": 200})
             return templates.TemplateResponse("index.html", {"request": request})
+        
         logger.error(
             {"error": str(response["error"]), "status_code": response["status_code"]}
         )
@@ -96,7 +103,7 @@ async def submit_register(
     email: str = Form(...),
     password: str = Form(...),
     confirm_password: str = Form(...)
-):
+) -> templates.TemplateResponse:        # type: ignore
     """Handles user account creation"""
     try:
         # Validate Inputs
@@ -127,14 +134,8 @@ async def submit_register(
     except ValidationError as val_err:
         return templates.TemplateResponse(
             "register.html",
-            {
-                "request": request,
-                "error_message": str(val_err.errors()[0]["msg"])
-                .replace("Value error, ", "")
-                .strip(),
-            },
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        )
+            {"request": request, "error_message": str(val_err.errors()[0]["msg"]).replace("Value error, ", "").strip()},
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
     except Exception as e:
         return templates.TemplateResponse(
             "register.html",
