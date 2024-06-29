@@ -31,6 +31,6 @@ variable "cognito_domain_name" {
 }
 
 variable "temporary_password_validity_days" {
-  type = number
+  type    = number
   default = 7
 }
