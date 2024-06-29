@@ -6,6 +6,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
 
+from pydantic import ValidationError
+
 from src.modules.models.inputs.app_inputs import LoginInput, RegisterInput
 from src.modules.services.aws.cognito_service import CognitoClient
 
@@ -21,12 +23,12 @@ async def lifespan(app: FastAPI):  # pylint: disable=W0613, W0621
 tags_metadata = [
     {
         "name": "User Authentication",
-        "description": "Endpoints for user authentication."
+        "description": "Endpoints for user authentication.",
     },
     {
         "name": "Data Operations",
-        "description": "Endpoints for creating, reading, updating, and deleting data."
-    }
+        "description": "Endpoints for creating, reading, updating, and deleting data.",
+    },
 ]
 
 app = FastAPI(lifespan=lifespan, docs_url="/", openapi_tags=tags_metadata)
@@ -49,15 +51,14 @@ async def read_register(request: Request):
 
 
 @app.post(
-        "/submit-login", 
-        response_class=HTMLResponse,
-        tags=["User Authentication"],
-        operation_id="LoginUser")
+    "/submit-login",
+    response_class=HTMLResponse,
+    tags=["User Authentication"],
+    operation_id="LoginUser",
+)
 async def submit_login(
-    request: Request,
-    email: str = Form(...),
-    password: str = Form(...)
-)-> RedirectResponse or templates.TemplateResponse: # type: ignore
+    request: Request, email: str = Form(...), password: str = Form(...)
+) -> RedirectResponse or templates.TemplateResponse:  # type: ignore
     """Handles login submission."""
     try:
         login_data = LoginInput(email=email, password=password)
@@ -70,15 +71,20 @@ async def submit_login(
                 {"request": request, "error_message": "Incorrect password"},
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             )
-    except ValueError as val_err:
+    except ValidationError as val_err:
         return templates.TemplateResponse(
             "login.html",
-            {"request": request, "error_message": str(val_err.errors()[0]["msg"])}, #pylint: disable=E1101 
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+            {"request": request, "error_message": str(val_err.errors()[0]["msg"])},
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
 
 
-@app.post("/submit-register", response_class=HTMLResponse, operation_id="RegisterUser", tags=["User Authentication"])
+@app.post(
+    "/submit-register",
+    response_class=HTMLResponse,
+    operation_id="RegisterUser",
+    tags=["User Authentication"],
+)
 async def submit_register(
     request: Request,
     email: str = Form(...),
@@ -91,23 +97,27 @@ async def submit_register(
             email=email, password=password, confirm_password=confirm_password
         )
 
-        # Directly attempt to register the user
-        await cognito_client.create_user_account(
+        # Attempt to register the user
+        response = await cognito_client.create_user_account(
             register_input.email, register_input.password
         )
 
-        # If registration is successful, redirect to success page
-        return templates.TemplateResponse("index.html", {"request": request})
-    except ValueError as val_err:
+        if response.get('UserSub'):
+            return templates.TemplateResponse("index.html", {"request": request})
         return templates.TemplateResponse(
             "register.html",
-            {"request": request, "error_message": str(val_err.errors()[0]["msg"])}, #pylint: disable=E1101
+            {"request": request, "error_message": str(response["error"])},
+            status_code=response["status_code"],
+        )
+    except ValidationError as val_err:
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error_message": str(val_err.errors()[0]["msg"])},
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
-    except Exception as err:
-        # Handle unexpected errors
+    except Exception as e:
         return templates.TemplateResponse(
             "register.html",
-            {"request": request, "error_message": f"An unexpected error occurred. {err}"},
+            {"request": request, "error_message": str(e)},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
