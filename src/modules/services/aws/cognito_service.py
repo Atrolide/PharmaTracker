@@ -27,24 +27,43 @@ class CognitoClient:
         Asynchronously creates a new user account in AWS Cognito.
         """
         try:
-            username = email
             response = self.client.sign_up(
                 ClientId=self.env.app_client_id,
                 SecretHash=calculate_secret_hash(
-                    self.env.app_client_id, self.env.app_client_secret, username
+                    self.env.app_client_id, self.env.app_client_secret, email
                 ),
-                Username=username,
+                Username=email,
                 Password=password,
                 UserAttributes=[{"Name": "email", "Value": email}],
             )
-            print(response)
+            # TODO: Log response success
             return response
         except self.client.exceptions.InvalidPasswordException as e:
-            print(e)
-            return {"error": str(e).split(': ', 2)[-1], "status_code": 422}
+            return {"error": str(e).split(": ", 2)[-1], "status_code": 422}
         except self.client.exceptions.UsernameExistsException as e:
-            print(e)
-            return {"error": str(e).split(': ', 2)[-1], "status_code": 409}
+            return {"error": str(e).split(": ", 2)[-1], "status_code": 409}
         except Exception as e:
-            print(f"Error creating user account: {e}")
             return {"error": str(e), "status_code": 500}
+        # TODO: Log errors
+
+    async def auth_user(self, email: str, password: str):
+        """
+        Authenticates user credentials
+        """
+        try:
+            response = self.client.initiate_auth(
+                AuthFlow='USER_PASSWORD_AUTH',
+                AuthParameters={
+                    'USERNAME': email,
+                    'PASSWORD': password,
+                    'SECRET_HASH': calculate_secret_hash(self.env.app_client_id, self.env.app_client_secret, email)
+                },
+                ClientId=self.env.app_client_id
+            )
+            return response
+        except (self.client.exceptions.NotAuthorizedException, self.client.exceptions.UserNotFoundException):
+            # TODO: Log -> {"error": str(e).split(": ", 2)[-1], "status_code": 401}
+            return {"error": "Incorrect Username or password!", "status_code": 401}
+        except Exception as e:
+            print(e)
+            return e

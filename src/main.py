@@ -61,22 +61,32 @@ async def submit_login(
 ) -> RedirectResponse or templates.TemplateResponse:  # type: ignore
     """Handles login submission."""
     try:
-        login_data = LoginInput(email=email, password=password)
-        if login_data.password == "aaa":
-            # Redirect to dashboard after successful login
-            return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
-        else:
-            return templates.TemplateResponse(
-                "login.html",
-                {"request": request, "error_message": "Incorrect password"},
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            )
+        login_input = LoginInput(email=email, password=password)
+        response = await cognito_client.auth_user(
+            login_input.email,
+            login_input.password
+        )
+        if response.get('AuthenticationResult', {}).get('AccessToken'):
+            print(response)
+            return templates.TemplateResponse("index.html", {"request": request})
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error_message": str(response["error"])},
+            status_code=response["status_code"],
+        )
     except ValidationError as val_err:
         return templates.TemplateResponse(
             "login.html",
             {"request": request, "error_message": str(val_err.errors()[0]["msg"])},
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
+    except Exception as e:
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error_message": str(e)},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
 
 
 @app.post(
