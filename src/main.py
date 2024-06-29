@@ -1,13 +1,19 @@
 """Main entrypoint for the app"""
 
+# General
+import logging
 from contextlib import asynccontextmanager
+
+# FastAPI
 from fastapi import FastAPI, Request, Form, status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
 
+# Pydantic
 from pydantic import ValidationError
 
+# Internal
 from src.modules.models.inputs.app_inputs import LoginInput, RegisterInput
 from src.modules.services.aws.cognito_service import CognitoClient
 
@@ -20,20 +26,14 @@ async def lifespan(app: FastAPI):  # pylint: disable=W0613, W0621
     print("Application is shutting down")
 
 
-tags_metadata = [
-    {
-        "name": "User Authentication",
-        "description": "Endpoints for user authentication.",
-    },
-    {
-        "name": "Data Operations",
-        "description": "Endpoints for creating, reading, updating, and deleting data.",
-    },
-]
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-app = FastAPI(lifespan=lifespan, docs_url="/", openapi_tags=tags_metadata)
+
+app = FastAPI(lifespan=lifespan)
 templates = Jinja2Templates(directory="src/frontend/templates")
 app.mount("/static", StaticFiles(directory="src/frontend/static"), name="static")
+
 
 cognito_client = CognitoClient()
 
@@ -50,12 +50,7 @@ async def read_register(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
 
 
-@app.post(
-    "/submit-login",
-    response_class=HTMLResponse,
-    tags=["User Authentication"],
-    operation_id="LoginUser",
-)
+@app.post("/submit-login", response_class=HTMLResponse)
 async def submit_login(
     request: Request, email: str = Form(...), password: str = Form(...)
 ) -> RedirectResponse or templates.TemplateResponse:  # type: ignore
@@ -63,12 +58,14 @@ async def submit_login(
     try:
         login_input = LoginInput(email=email, password=password)
         response = await cognito_client.auth_user(
-            login_input.email,
-            login_input.password
+            login_input.email, login_input.password
         )
-        if response.get('AuthenticationResult', {}).get('AccessToken'):
-            print(response)
+        if response.get("AuthenticationResult", {}).get("AccessToken"):
+            logger.info({"message": "Login successfull", "status_code": 200})
             return templates.TemplateResponse("index.html", {"request": request})
+        logger.error(
+            {"error": str(response["error"]), "status_code": response["status_code"]}
+        )
         return templates.TemplateResponse(
             "register.html",
             {"request": request, "error_message": str(response["error"])},
@@ -77,7 +74,12 @@ async def submit_login(
     except ValidationError as val_err:
         return templates.TemplateResponse(
             "login.html",
-            {"request": request, "error_message": str(val_err.errors()[0]["msg"])},
+            {
+                "request": request,
+                "error_message": str(val_err.errors()[0]["msg"])
+                .replace("Value error, ", "")
+                .strip(),
+            },
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
     except Exception as e:
@@ -88,21 +90,16 @@ async def submit_login(
         )
 
 
-
-@app.post(
-    "/submit-register",
-    response_class=HTMLResponse,
-    operation_id="RegisterUser",
-    tags=["User Authentication"],
-)
+@app.post("/submit-register", response_class=HTMLResponse)
 async def submit_register(
     request: Request,
     email: str = Form(...),
     password: str = Form(...),
-    confirm_password: str = Form(...),
+    confirm_password: str = Form(...)
 ):
     """Handles user account creation"""
     try:
+        # Validate Inputs
         register_input = RegisterInput(
             email=email, password=password, confirm_password=confirm_password
         )
@@ -112,17 +109,30 @@ async def submit_register(
             register_input.email, register_input.password
         )
 
-        if response.get('UserSub'):
+        # Success
+        if response.get("UserSub"):
+            logger.info({"message": "User registered successfully", "status_code": 200})
             return templates.TemplateResponse("index.html", {"request": request})
+
+        # Error
+        logger.error(
+            {"error": str(response["error"]), "status_code": response["status_code"]}
+        )
         return templates.TemplateResponse(
             "register.html",
             {"request": request, "error_message": str(response["error"])},
             status_code=response["status_code"],
         )
+
     except ValidationError as val_err:
         return templates.TemplateResponse(
             "register.html",
-            {"request": request, "error_message": str(val_err.errors()[0]["msg"])},
+            {
+                "request": request,
+                "error_message": str(val_err.errors()[0]["msg"])
+                .replace("Value error, ", "")
+                .strip(),
+            },
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
     except Exception as e:

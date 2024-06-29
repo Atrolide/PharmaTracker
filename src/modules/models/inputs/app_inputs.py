@@ -32,4 +32,6 @@ class RegisterInput(LoginInput):
         password = self.password
         if confirm_password != password:
             raise ValueError("Passwords do not match!")
+        if len(password) <= 1:
+            raise ValueError("Password not long enough")
         return self
