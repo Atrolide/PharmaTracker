@@ -9,9 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
-<body>
-    <h1>Welcome to the Root Page!</h1>
-    <p>This is a dynamic page rendered with Jinja2.</p>
+<body class="{% if success_message %}success-message-present{% endif %}">
+    <div class="container">
+        <h1>Welcome to the Root Page!</h1>
+        <p>This is a dynamic page rendered with Jinja2.</p>
+
+        {% if success_message %}
+        <div id="success-section">{{ success_message }}</div>
+        {% endif %}
+
+    </div>
 </body>
 
 </html>

@@ -86,6 +86,21 @@ button {
     display: block;
 }
 
+#success-section {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    color: #155724; /* Dark green text color */
+    background-color: #86c795; /* Light green background color */
+    display: none; /* Hide by default */
+}
+
+/* Display the success section when there is a success message */
+.success-message-present #success-section {
+    display: block;
+}
+
+
 
 
 

@@ -9,7 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
-<body class="{% if error_message %}error-message-present{% endif %}">
+<body class="{% if error_message %}error-message-present{% endif %} {% if success_message %}success-message-present{% endif %}">
+
+
     <div class="container">
         <h2>Login</h2>
         <form action="/submit-login" method="post" enctype="multipart/form-data">
@@ -21,9 +23,15 @@
         {% if error_message %}
         <div id="error-section">{{ error_message }}</div>
         {% endif %}
+
+        {% if success_message %}
+        <div id="success-section" class="success-message">{{ success_message }}</div>
+        {% endif %}
+
         <a href="/register" class="register-link">
             Don't have an account?<br>Sign up here
         </a>
+        
     </div>
 </body>
 
