@@ -5,6 +5,7 @@ from boto3.session import Session
 from src.modules.config.aws_settings import CognitoSettings
 from src.modules.utils.aws_helpers import calculate_secret_hash
 
+
 class CognitoClient:
     """Class for AWS Cognito User Pool client"""
 
@@ -21,7 +22,6 @@ class CognitoClient:
         # Create a client for interacting with AWS Cognito
         self.client = self.session.client("cognito-idp")
 
-
     async def create_user_account(self, email: str, password: str):
         """
         Asynchronously creates a new user account in AWS Cognito.
@@ -37,13 +37,17 @@ class CognitoClient:
                 UserAttributes=[{"Name": "email", "Value": email}],
             )
             return response
-        except (self.client.exceptions.InvalidPasswordException, self.client.exceptions.InvalidParameterException) as e:
+        except (
+            self.client.exceptions.InvalidPasswordException,
+            self.client.exceptions.InvalidParameterException,
+        ) as e:
             return {"error": str(e).split(": ", 2)[-1], "status_code": 422}
         except self.client.exceptions.UsernameExistsException as e:
             return {"error": str(e).split(": ", 2)[-1], "status_code": 409}
+        except self.client.exceptions.LimitExceededException as e:
+            return {"error": "Too many requests", "status_code": 429}
         except Exception as e:
             return {"error": str(e), "status_code": 500}
-
 
     async def auth_user(self, email: str, password: str):
         """
@@ -51,17 +55,34 @@ class CognitoClient:
         """
         try:
             response = self.client.initiate_auth(
-                AuthFlow='USER_PASSWORD_AUTH',
+                AuthFlow="USER_PASSWORD_AUTH",
                 AuthParameters={
-                    'USERNAME': email,
-                    'PASSWORD': password,
-                    'SECRET_HASH': calculate_secret_hash(self.env.app_client_id, self.env.app_client_secret, email)
+                    "USERNAME": email,
+                    "PASSWORD": password,
+                    "SECRET_HASH": calculate_secret_hash(
+                        self.env.app_client_id, self.env.app_client_secret, email
+                    ),
                 },
-                ClientId=self.env.app_client_id
+                ClientId=self.env.app_client_id,
             )
             return response
-        except (self.client.exceptions.NotAuthorizedException, self.client.exceptions.UserNotFoundException):
+        except (
+            self.client.exceptions.NotAuthorizedException,
+            self.client.exceptions.UserNotFoundException,
+            self.client.exceptions.UserNotConfirmedException,
+        ):
             return {"error": "Incorrect Username or password!", "status_code": 401}
         except Exception as e:
-            print(e)
-            return e
+            return {"error": str(e), "status_code": 500}
+
+    def get_current_user(self, token: str):
+        """
+        Validates access token. Returns current user
+        """
+        try:
+            response = self.client.get_user(AccessToken=token)
+            return response
+        except self.client.exceptions.NotAuthorizedException:
+            return {"error": "Not Authorized", "status_code": 401}
+        except Exception as e:
+            return {"error": str(e), "status_code": 500}
