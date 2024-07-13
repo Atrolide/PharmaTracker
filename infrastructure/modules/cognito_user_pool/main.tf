@@ -21,6 +21,10 @@ resource "aws_cognito_user_pool" "pharma_tracker_pool" {
     require_uppercase                = var.require_uppercase
     temporary_password_validity_days = var.temporary_password_validity_days
   }
+
+    tags = {
+    Project = var.tag
+  }
 }
 
 resource "aws_cognito_user_pool_client" "pharma_tracker_pool_client" {

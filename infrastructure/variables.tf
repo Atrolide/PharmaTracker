@@ -9,12 +9,18 @@ variable "env" {
   default     = "dev"
 
   validation {
-    condition     = contains(["dev", "tud", "prd"], var.env)
-    error_message = "Invalid environment specified. Allowed values are 'dev', 'tud', or 'prd'."
+    condition     = contains(["dev", "prd"], var.env)
+    error_message = "Invalid environment specified. Allowed values are 'dev' or 'prd'."
   }
 }
 
 variable "cognito_domain_name" {
   type        = string
   description = "Name of the domain for Cognito User Pool."
+}
+
+variable "tag" {
+  type = string
+  description = "Default resource tag"
+  default = "Thesis"
 }

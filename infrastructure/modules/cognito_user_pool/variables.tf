@@ -34,3 +34,7 @@ variable "temporary_password_validity_days" {
   type    = number
   default = 7
 }
+
+variable "tag" {
+  type = string
+}
