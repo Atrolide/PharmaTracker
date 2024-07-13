@@ -4,24 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Root Page</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="../static/css/styles.css"> <!-- Linking the CSS file -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body class="{% if success_message %}success-message-present{% endif %}">
     <div class="container">
-        <form action="/logout" method="post" class="logout-form">
-            <button type="submit", class="logout-button">Logout</button>
-        </form>
+        <header>
+            <nav class="navbar">
+                <ul class="navbar-menu">
+                    <li class="navbar-item"><a href="/" class="navbar-link">Home</a></li>
+                    <li class="navbar-item"><a href="/profile" class="navbar-link">Profile</a></li>
+                    <li class="navbar-item"><a href="/settings" class="navbar-link">Settings</a></li>
+                    <li class="navbar-item navbar-logout">
+                        <form action="/logout" method="post" class="logout-form">
+                            <button type="submit" class="logout-button">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+        </header>
 
-        <h1>Welcome to the Root Page!</h1>
-        <p>This is a dynamic page rendered with Jinja2.</p>
+        <main>
+            <h1>Welcome to the Dashboard!</h1>
+            <p>This is a dynamic page rendered with Jinja2.</p>
 
-        {% if success_message %}
-        <div id="success-section">{{ success_message }}</div>
-        {% endif %}
-
+            {% if success_message %}
+            <div id="success-section">{{ success_message }}</div>
+            {% endif %}
+        </main>
     </div>
 </body>
 

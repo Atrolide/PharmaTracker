@@ -67,21 +67,56 @@ button {
 /* Logout Button */
 .logout-button {
     padding: 8px;
-    color: #FF8C00;
+    color: #fff;
     font-weight: bold;
     border: none;
     cursor: pointer;
     font-size: 12px;
-    background-color: transparent;
-    transition: color 0.3s ease;
-    position: absolute;
-    top: 16px;
-    right: 16px;
+    background-color: #FF8C00;
+    transition: background-color 0.3s ease;
 }
 
 .logout-button:hover {
+    background-color: #FFA500;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.navbar-menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.navbar-item {
+    margin: 0;
+}
+
+.navbar-link {
     color: #fff;
-    background-color: #FF8C00;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navbar-link:hover {
+    color: #FFA500;
+}
+
+.navbar-logout {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
 }
 
 /* Error Section */
