@@ -11,6 +11,10 @@
 
 <body class="{% if success_message %}success-message-present{% endif %}">
     <div class="container">
+        <form action="/logout" method="post" class="logout-form">
+            <button type="submit", class="logout-button">Logout</button>
+        </form>
+
         <h1>Welcome to the Root Page!</h1>
         <p>This is a dynamic page rendered with Jinja2.</p>
 

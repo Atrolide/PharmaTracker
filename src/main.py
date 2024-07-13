@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from functools import wraps
 
 # FastAPI
-from fastapi import FastAPI, Request, Form, status
+from fastapi import FastAPI, Request, Response, Form, status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -77,6 +77,20 @@ async def read_register(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
 
 
+@app.post("/logout")
+async def logout() -> RedirectResponse:
+    """
+    Clears cookies, logs out user.
+    """
+    redirect = RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
+    redirect.delete_cookie(
+        key="session_token",
+        httponly=True,
+        secure=True,
+        samesite="strict"
+        )
+    return redirect
+
 
 @app.post("/submit-login", response_class=HTMLResponse)
 async def submit_login(
@@ -103,7 +117,6 @@ async def submit_login(
                 key="session_token",
                 value=session_token,
                 httponly=True,
-                secure=True,
                 samesite="strict"
                 )
             return redirect
