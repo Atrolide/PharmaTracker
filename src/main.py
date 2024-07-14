@@ -86,7 +86,6 @@ async def logout() -> RedirectResponse:
     redirect.delete_cookie(
         key="session_token",
         httponly=True,
-        secure=True,
         samesite="strict"
         )
     return redirect

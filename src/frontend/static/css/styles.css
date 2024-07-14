@@ -67,17 +67,20 @@ button {
 /* Logout Button */
 .logout-button {
     padding: 8px;
-    color: #fff;
+    color: #FFA500; 
     font-weight: bold;
     border: none;
     cursor: pointer;
-    font-size: 12px;
-    background-color: #FF8C00;
-    transition: background-color 0.3s ease;
+    font-size: 16px; 
+    background-color: transparent;
+    transition: color 0.3s ease;
+    text-decoration: none;
+    display: inline-block; 
+    vertical-align: middle; 
 }
 
 .logout-button:hover {
-    background-color: #FFA500;
+    color: #fff; 
 }
 
 /* Navbar Styles */
@@ -96,6 +99,7 @@ button {
     display: flex;
     gap: 20px;
     width: 100%;
+    align-items: center; /
 }
 
 .navbar-item {
@@ -107,6 +111,8 @@ button {
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s ease;
+    display: inline-block; 
+    vertical-align: middle; 
 }
 
 .navbar-link:hover {
@@ -118,6 +124,7 @@ button {
     display: flex;
     align-items: center;
 }
+
 
 /* Error Section */
 #error-section {
