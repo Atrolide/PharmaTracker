@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="icon" href="../static/img/PT_logo_v1.png" type="image/x-icon">
     <link rel="stylesheet" href="../static/css/styles.css"> <!-- Linking the CSS file -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -16,7 +17,6 @@
                 <ul class="navbar-menu">
                     <li class="navbar-item"><a href="/" class="navbar-link">Home</a></li>
                     <li class="navbar-item"><a href="/medkit" class="navbar-link">My Medkit</a></li>
-                    <li class="navbar-item"><a href="/settings" class="navbar-link">Settings</a></li>
                     <li class="navbar-item navbar-logout">
                         <form action="/logout" method="post" class="logout-form">
                             <button type="submit" class="logout-button">Logout</button>
@@ -28,8 +28,53 @@
 
         <main>
             <h1>Welcome to the Dashboard!</h1>
-            <p>This is a dynamic page rendered with Jinja2.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et turpis ultricies nisl mollis rhoncus.
+                Praesent ac facilisis orci. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+                inceptos himenaeos. Proin at mi vestibulum, tempus turpis eu, lobortis dui. Nunc condimentum velit a
+                ante tempus vestibulum. Aenean maximus quam eget felis dictum, ac accumsan tellus ultricies.
+                Pellentesque magna eros, elementum a condimentum vitae, semper sit amet felis.<br><br>
 
+                Donec metus mauris, molestie eu consequat eget, commodo et odio. Sed a turpis mollis, fringilla purus a,
+                vehicula neque. Aenean ultrices diam non metus ultrices, vel volutpat orci mollis. Maecenas varius leo
+                et dolor ullamcorper, vitae ultricies sem faucibus. Suspendisse id risus sed felis elementum vulputate
+                sit amet ut nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
+                himenaeos. Cras tellus sapien, congue id est sit amet, congue interdum orci. Phasellus hendrerit dui et
+                dui ultrices interdum. Curabitur scelerisque, massa eu ullamcorper feugiat, ante nulla luctus ligula, a
+                consequat odio mauris at dui. Fusce luctus tempus lectus, ut pharetra nisi porttitor ut. Nullam nec nunc
+                metus. Sed nec facilisis mi, quis tempus leo.<br><br>
+
+                Donec accumsan aliquam nibh, in commodo leo rutrum et. Etiam sit amet sem commodo sem blandit
+                condimentum ac eu nibh. Quisque tincidunt porta nunc vel tempor. Proin laoreet commodo ex nec tincidunt.
+                Morbi neque nunc, mattis et molestie quis, laoreet ut nulla. Sed eget commodo purus. Maecenas nec
+                lacinia arcu.<br><br>
+
+                Nulla fringilla nec justo ut gravida. Ut tempus volutpat fermentum. Quisque et lacinia magna, et
+                eleifend nibh. Maecenas ultricies ipsum nunc, vitae suscipit sem fermentum sed. Donec vehicula dignissim
+                condimentum. Fusce ac condimentum nibh. In mauris nibh, placerat quis nulla pharetra, euismod pretium
+                nisl. Morbi ut nibh nisi. In ut molestie risus, vitae luctus urna. Nunc semper malesuada ante sit amet
+                tincidunt. Pellentesque aliquet cursus iaculis. Morbi velit nisl, mollis a magna id, tincidunt gravida
+                orci. Vestibulum vitae diam semper urna sodales condimentum. Ut porta, felis a tempus euismod, nibh nisi
+                dignissim sapien, at imperdiet metus ligula sit amet velit.<br><br>
+
+                Nunc a bibendum turpis, ac laoreet erat. Donec posuere feugiat metus, ac rhoncus risus mollis sit amet.
+                Pellentesque volutpat turpis semper nisi venenatis varius. Maecenas sollicitudin pellentesque mi, vel
+                tristique sapien consequat consequat. Maecenas volutpat metus sit amet dui molestie luctus. In magna
+                lorem, ullamcorper sit amet laoreet eget, mollis quis odio. Donec rutrum nec nunc vel tincidunt.<br><br>
+
+                Ut efficitur urna ex, tempus ultrices tortor ornare id. Quisque venenatis purus vel sem dapibus
+                elementum. Pellentesque lacinia, neque vel pellentesque porta, augue neque egestas urna, eu viverra
+                ligula metus nec neque. Etiam faucibus id erat ut varius. In non rhoncus est, ut tempus orci. Ut
+                ultricies interdum nunc et posuere. In malesuada et velit rhoncus molestie. Mauris quis luctus turpis.
+                Etiam dictum lacus at ante egestas varius ut vitae elit. Maecenas vitae enim felis.<br><br>
+
+                Phasellus euismod convallis velit, in tincidunt ipsum dignissim in. Sed feugiat mi vitae condimentum
+                tempus. Curabitur tincidunt quam id enim posuere, sit amet scelerisque urna pretium. Interdum et
+                malesuada fames ac ante ipsum primis in faucibus. Vestibulum facilisis pretium urna, et tempus felis
+                euismod sed. Integer ut urna nibh. Mauris metus turpis, ultricies eu justo ut, sodales dictum purus.
+                Cras fringilla metus nunc, ut iaculis velit pulvinar quis. Morbi commodo non mi at consectetur. Aliquam
+                enim eros, pharetra vitae convallis id, pretium eu eros. Sed diam purus, tristique vel mauris vitae,
+                pretium vehicula massa. Fusce a facilisis nunc. Integer augue justo, porttitor id tortor ut, dictum
+                dictum leo. Nullam vel urna a elit interdum commodo.</p>
             {% if success_message %}
             <div id="success-section">{{ success_message }}</div>
             {% endif %}

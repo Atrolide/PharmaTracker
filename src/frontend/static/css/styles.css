@@ -14,14 +14,18 @@ body {
 
 /* Container */
 .container {
-    width: 100%;
-    max-width: 400px;
-    padding: 24px;
+    width: 95%;
+    max-width: 1200px;
+    max-height: 95%;
+    padding-top: 15px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 24px;
     background-color: #e4e8c8;
-    margin: 50px auto 0;
+    margin: 15px auto;
     border-radius: 6px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    position: relative;
+    box-shadow: 0 0 15px rgba(2, 240, 34, 0.329);
+    box-sizing: border-box;
 }
 
 .container h2 {
@@ -67,31 +71,32 @@ button {
 /* Logout Button */
 .logout-button {
     padding: 8px;
-    color: #FFA500; 
+    color: #FFA500;
     font-weight: bold;
     border: none;
     cursor: pointer;
-    font-size: 16px; 
+    font-size: 16px;
     background-color: transparent;
     transition: color 0.3s ease;
     text-decoration: none;
-    display: inline-block; 
-    vertical-align: middle; 
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .logout-button:hover {
-    color: #fff; 
+    color: #fff;
 }
 
 /* Navbar Styles */
 .navbar {
-    background-color: #333;
+    background-color: #13874f;
     padding: 10px;
     border-radius: 6px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgb(255, 255, 255);
 }
 
 .navbar-menu {
@@ -99,7 +104,7 @@ button {
     display: flex;
     gap: 20px;
     width: 100%;
-    align-items: center; /
+    align-items: center;/
 }
 
 .navbar-item {
@@ -111,8 +116,8 @@ button {
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s ease;
-    display: inline-block; 
-    vertical-align: middle; 
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .navbar-link:hover {
@@ -172,30 +177,10 @@ button {
     text-decoration-color: #0056b3;
 }
 
-/* Responsive Adjustments */
+/* Responsive modifications */
 @media (max-width: 768px) {
     .container {
-        margin-top: 50px;
-    }
-
-    input[type="email"],
-    input[type="password"] {
-        font-size: 16px;
-    }
-
-    button {
-        padding: 14px;
-    }
-}
-
-@media (min-width: 769px) and (max-width: 1200px) {
-    .container {
-        max-width: 800px;
-    }
-}
-
-@media (min-width: 1201px) {
-    .container {
-        max-width: 400px;
+        margin: 10px;
+        /* Smaller margin for mobile devices */
     }
 }
