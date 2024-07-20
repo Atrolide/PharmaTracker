@@ -87,11 +87,12 @@ button {
     color: #fff;
 }
 
+
 /* Navbar Styles */
 .navbar {
     background-color: #13874f;
     padding: 10px;
-    border-radius: 6px;
+    border-radius: 36px;
     display: flex;
     justify-content: flex-start;
     align-items: center;

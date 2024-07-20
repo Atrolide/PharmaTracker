@@ -69,11 +69,15 @@ async def get_root(request: Request):
 @app.get("/login", response_class=HTMLResponse)
 async def read_login(request: Request):
     """Displays the login page."""
+    if request.cookies.get("session_token"):
+        return RedirectResponse(url="/", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
     return templates.TemplateResponse("login.html", {"request": request})
 
 @app.get("/register", response_class=HTMLResponse)
 async def read_register(request: Request):
     """Displays the registration page."""
+    if request.cookies.get("session_token"):
+        return RedirectResponse(url="/", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
     return templates.TemplateResponse("register.html", {"request": request})
 
 

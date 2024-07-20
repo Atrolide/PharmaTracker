@@ -27,7 +27,9 @@
         </header>
 
         <main>
-            <h1>Welcome to the Dashboard!</h1>
+            <h2>{% if success_message %}
+                <div id="success-section">{{ success_message }}</div>
+                {% endif %}</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et turpis ultricies nisl mollis rhoncus.
                 Praesent ac facilisis orci. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
                 inceptos himenaeos. Proin at mi vestibulum, tempus turpis eu, lobortis dui. Nunc condimentum velit a
@@ -75,9 +77,6 @@
                 enim eros, pharetra vitae convallis id, pretium eu eros. Sed diam purus, tristique vel mauris vitae,
                 pretium vehicula massa. Fusce a facilisis nunc. Integer augue justo, porttitor id tortor ut, dictum
                 dictum leo. Nullam vel urna a elit interdum commodo.</p>
-            {% if success_message %}
-            <div id="success-section">{{ success_message }}</div>
-            {% endif %}
         </main>
     </div>
 </body>
