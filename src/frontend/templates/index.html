@@ -14,22 +14,29 @@
     <div class="container">
         <header>
             <nav class="navbar">
+                <!-- Hidden checkbox for controlling dropdown visibility -->
+                <input type="checkbox" id="navbar-toggle" class="navbar-toggle-checkbox">
+                <label for="navbar-toggle" class="navbar-toggle">
+                    <span class="navbar-toggle-icon"></span>
+                </label>
                 <ul class="navbar-menu">
                     <li class="navbar-item"><a href="/" class="navbar-link">Home</a></li>
                     <li class="navbar-item"><a href="/medkit" class="navbar-link">My Medkit</a></li>
-                    <li class="navbar-item navbar-logout">
-                        <form action="/logout" method="post" class="logout-form">
-                            <button type="submit" class="logout-button">Logout</button>
-                        </form>
-                    </li>
+                    <li class="navbar-item"><a href="/dosage" class="navbar-link">Daily Dosage</a></li>
                 </ul>
+                <div class="navbar-logout">
+                    <form action="/logout" method="post" class="logout-form">
+                        <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                </div>
             </nav>
         </header>
-
+        
         <main>
             <h2>{% if success_message %}
                 <div id="success-section">{{ success_message }}</div>
-                {% endif %}</h2>
+                {% endif %}
+            </h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et turpis ultricies nisl mollis rhoncus.
                 Praesent ac facilisis orci. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
                 inceptos himenaeos. Proin at mi vestibulum, tempus turpis eu, lobortis dui. Nunc condimentum velit a
