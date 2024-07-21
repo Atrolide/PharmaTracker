@@ -20,7 +20,7 @@ variable "cognito_domain_name" {
 }
 
 variable "tag" {
-  type = string
+  type        = string
   description = "Default resource tag"
-  default = "Thesis"
+  default     = "Thesis"
 }

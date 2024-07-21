@@ -22,7 +22,7 @@ resource "aws_cognito_user_pool" "pharma_tracker_pool" {
     temporary_password_validity_days = var.temporary_password_validity_days
   }
 
-    tags = {
+  tags = {
     Project = var.tag
   }
 }

@@ -7,11 +7,11 @@ module "pharma_tracker_pool" {
   require_symbols     = !local.is_dev
   require_uppercase   = !local.is_dev
   cognito_domain_name = var.cognito_domain_name
-  tag = var.tag
+  tag                 = var.tag
 }
 
 module "tablets_table" {
-  source = "./modules/dynamo_db"
+  source     = "./modules/dynamo_db"
   table_name = "Tablets"
-  tag = var.tag
+  tag        = var.tag
 }
