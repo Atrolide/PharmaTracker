@@ -26,3 +26,8 @@ class CognitoSettings(BaseAwsSettings):
     app_client_secret: str | None = os.getenv("APP_CLIENT_SECRET")
 
     model_config = SettingsConfigDict(case_sensitive=True)
+
+class DynamoDBSettings(BaseAwsSettings):
+    """Settings for DynamoDB Client"""
+    table_name: str | None = os.getenv("DYNAMO_DB_TABLE_NAME")
+    model_config = SettingsConfigDict(case_sensitive=True)

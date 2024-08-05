@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medkit</title>
+    <link rel="icon" href="../static/img/PT_logo_v1.png" type="image/x-icon">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <nav class="navbar">
+                <!-- Hidden checkbox for controlling dropdown visibility -->
+                <input type="checkbox" id="navbar-toggle" class="navbar-toggle-checkbox">
+                <label for="navbar-toggle" class="navbar-toggle">
+                    <span class="navbar-toggle-icon"></span>
+                </label>
+                <ul class="navbar-menu">
+                    <li class="navbar-item"><a href="/" class="navbar-link">Home</a></li>
+                    <li class="navbar-item"><a href="/medkit" class="navbar-link">My Medkit</a></li>
+                    <li class="navbar-item"><a href="/about" class="navbar-link">About</a></li>
+                    <li class="navbar-item">
+                        <form action="/logout" method="post" class="logout-form">
+                            <button type="submit" class="navbar-link">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <h2>About</h2>
+
+            <p> PharmaTracker is a cloud native web application designed to help pharmacies and individuals keep track of their
+                medicines. It acts as a digital storage space for tracking medications in a pharmacy or a home medicine
+                cabinet. The app is especially useful for elderly users who might find it challenging to manage their
+                medicine supplies. To make it more user-friendly for this audience, the app features a simple and
+                supportive UI.<br><br>
+
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et turpis ultricies nisl mollis rhoncus.
+                Praesent ac facilisis orci. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+                inceptos himenaeos. Proin at mi vestibulum, tempus turpis eu, lobortis dui. Nunc condimentum velit a
+                ante tempus vestibulum. Aenean maximus quam eget felis dictum, ac accumsan tellus ultricies.
+                Pellentesque magna eros, elementum a condimentum vitae, semper sit amet felis.</p>
+        </main>
+    </div>
+</body>
+
+</html>

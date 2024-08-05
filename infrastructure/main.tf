@@ -12,6 +12,6 @@ module "pharma_tracker_pool" {
 
 module "tablets_table" {
   source     = "./modules/dynamo_db"
-  table_name = "Tablets"
+  table_name = "MedicineTable-${var.env}"
   tag        = var.tag
 }

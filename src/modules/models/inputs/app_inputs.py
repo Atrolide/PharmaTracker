@@ -35,3 +35,20 @@ class RegisterInput(LoginInput):
         if len(password) <= 1:
             raise ValueError("Password not long enough")
         return self
+
+
+class MedicineInput(BaseModel):
+    """Input model for medicine records"""
+
+    user_sub: str
+    name: str
+    type: str
+    quantity: int
+    expiration_date: str
+
+    @model_validator(mode="after")
+    def check_exp_date_regex(self) -> "MedicineInput":
+        """Model validator for expiration date format"""
+        if not re.match(r"^\d{4}-\d{2}-\d{2}$", self.expiration_date):
+            raise ValueError("Expiration date must be in 'YYYY-MM-DD' format.")
+        return self

@@ -43,7 +43,7 @@ input[type="password"] {
     border-radius: 6px;
     background-color: #e4e8c8;
     color: #000;
-    font-size: 14px;
+    font-size: 18px;
     outline: none;
     transition: border-color 0.3s ease;
 }
@@ -62,23 +62,7 @@ button {
     cursor: pointer;
     border-radius: 6px;
     font-weight: bold;
-}
-
-/* Logout Button */
-.logout-button {
-    padding: 8px;
-    color: #FFA500;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    background-color: transparent;
-    transition: color 0.3s ease;
-    text-decoration: none;
-}
-
-.logout-button:hover {
-    color: #fff;
+    font-size: 18px;
 }
 
 /* Navbar Styles */
@@ -90,8 +74,6 @@ button {
     background-color: #13874f;
     padding: 10px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     box-shadow: 0 0 15px rgb(255, 255, 255);
     z-index: 1000;
 }
@@ -106,7 +88,7 @@ button {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 24px;
+    font-size: 30px;
     color: #fff;
     transition: transform 0.3s ease;
 }
@@ -122,11 +104,12 @@ button {
 /* Navbar Menu */
 .navbar-menu {
     list-style: none;
-    display: none; /* Default state is hidden */
+    display: none;
+    /* Default state is hidden */
     gap: 20px;
     align-items: center;
     flex-direction: column;
-    background-color: rgba(46, 139, 87, 0.8);
+    background-color: rgba(46, 139, 86, 0.9);
     position: absolute;
     top: 60px;
     right: 0;
@@ -157,11 +140,63 @@ button {
     color: #FFA500;
 }
 
-.navbar-logout {
-    margin-left: auto;
+
+/* Add Medicine Form */
+#add-medicine-form {
     display: flex;
-    align-items: center;
-    gap: 20px;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+}
+
+#add-medicine-form.hidden {
+    display: none;
+}
+
+#add-medicine-form label {
+    font-weight: bold;
+}
+
+#add-medicine-form input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #e4e8c8;
+    color: #000;
+    font-size: 18px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+#add-medicine-form input:focus {
+    border-color: #FFA500;
+}
+
+#add-medicine-form button {
+    padding: 12px;
+    background-color: #13874f;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+/* Medicine List */
+#medicine-list {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #e4e8c8;
+    border: 1px solid #ccc;
+}
+
+#medicine-list p {
+    margin: 0;
 }
 
 
@@ -215,8 +250,7 @@ button {
         /* Remove default margin for mobile devices */
     }
 
-    .navbar-link,
-    .logout-button {
+    .navbar-link {
         font-size: 20px;
     }
 }

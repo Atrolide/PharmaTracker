@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from functools import wraps
 
 # FastAPI
-from fastapi import FastAPI, Request, Response, Form, status
+from fastapi import FastAPI, Request, Form, status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -15,7 +15,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import ValidationError
 
 # Internal
-from src.modules.models.inputs.app_inputs import LoginInput, RegisterInput
+from src.modules.models.inputs.app_inputs import LoginInput, RegisterInput, MedicineInput
 from src.modules.services.aws.cognito_service import CognitoClient
 
 
@@ -79,6 +79,20 @@ async def read_register(request: Request):
     if request.cookies.get("session_token"):
         return RedirectResponse(url="/", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
     return templates.TemplateResponse("register.html", {"request": request})
+
+
+@app.get("/medkit", response_class=HTMLResponse)
+@login_required
+async def get_medkit(request: Request):
+    """Displays the login page."""
+    return templates.TemplateResponse("medkit.html", {"request": request})
+
+
+@app.get("/about", response_class=HTMLResponse)
+@login_required
+async def get_dosage(request: Request):
+    """Displays the login page."""
+    return templates.TemplateResponse("about.html", {"request": request})
 
 
 @app.post("/logout")

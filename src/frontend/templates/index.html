@@ -22,16 +22,16 @@
                 <ul class="navbar-menu">
                     <li class="navbar-item"><a href="/" class="navbar-link">Home</a></li>
                     <li class="navbar-item"><a href="/medkit" class="navbar-link">My Medkit</a></li>
-                    <li class="navbar-item"><a href="/dosage" class="navbar-link">Daily Dosage</a></li>
+                    <li class="navbar-item"><a href="/about" class="navbar-link">About</a></li>
+                    <li class="navbar-item">
+                        <form action="/logout" method="post" class="logout-form">
+                            <button type="submit" class="navbar-link">Logout</button>
+                        </form>
+                    </li>
                 </ul>
-                <div class="navbar-logout">
-                    <form action="/logout" method="post" class="logout-form">
-                        <button type="submit" class="logout-button">Logout</button>
-                    </form>
-                </div>
             </nav>
         </header>
-        
+
         <main>
             <h2>{% if success_message %}
                 <div id="success-section">{{ success_message }}</div>
