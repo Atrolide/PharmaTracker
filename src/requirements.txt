@@ -1,6 +1,6 @@
-fastapi
-uvicorn
-pydantic
-pydantic-settings
-python-dotenv
-boto3
+fastapi==0.111.1
+uvicorn==0.30.3
+pydantic==2.8.2
+pydantic-settings==2.3.4
+python-dotenv==1.0.1
+boto3==1.34.149
