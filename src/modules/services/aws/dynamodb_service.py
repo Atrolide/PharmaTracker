@@ -29,21 +29,23 @@ class DynamoDBClient:
         """Insert a new medicine record into the DynamoDB table"""
         # Generate a random UUID for medicine_id
         medicine_id = str(uuid.uuid4())
-
+        try:
         # Prepare the item for insertion
-        item = {
-            "user_sub": {"S": medicine_input.user_sub},
-            "medicine_id": {"S": medicine_id},
-            "medicine_name": {"S": medicine_input.medicine_name},
-            "medicine_type": {"S": medicine_input.medicine_type},
-            "quantity": {"N": str(medicine_input.quantity)},
-            "expiration_date": {"S": medicine_input.expiration_date},
-        }
+            item = {
+                "user_sub": {"S": medicine_input.user_sub},
+                "medicine_id": {"S": medicine_id},
+                "medicine_name": {"S": medicine_input.medicine_name},
+                "medicine_type": {"S": medicine_input.medicine_type},
+                "quantity": {"N": str(medicine_input.quantity)},
+                "expiration_date": {"S": medicine_input.expiration_date},
+            }
 
-        # Insert the item into the DynamoDB table
-        response = self.client.put_item(TableName=self.table_name, Item=item)
+            # Insert the item into the DynamoDB table
+            response = self.client.put_item(TableName=self.table_name, Item=item)
 
-        return response
+            return response
+        except Exception as e:
+            return {"error": str(e), "status_code": 500}
     
 
     async def get_medicines_by_user_sub(self, user_sub: str):
@@ -60,5 +62,4 @@ class DynamoDBClient:
             items = response.get("Items", [])
             return items
         except Exception as e:
-            print(f"Error querying items: {e}")
-            return None
+            return {"error": str(e), "status_code": 500}
