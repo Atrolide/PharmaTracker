@@ -110,8 +110,10 @@ async def get_medkit(request: Request):
         for item in medicine_list
     ]
 
+    sorted_medicine = sorted(medicine, key=lambda x: x['medicine_name'].lower())
+
     return templates.TemplateResponse(
-        "medkit.html", {"request": request, "medicines": medicine}
+        "medkit.html", {"request": request, "medicines": sorted_medicine}
     )
 
 
