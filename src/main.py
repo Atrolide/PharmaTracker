@@ -17,7 +17,10 @@ from pydantic import ValidationError
 # Internal
 from src.modules.models.inputs.app_inputs import LoginInput, RegisterInput, MedicineInput
 from src.modules.services.aws.cognito_service import CognitoClient
+from src.modules.services.aws.dynamodb_service import DynamoDBClient
 
+
+# App configuration
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # pylint: disable=W0613, W0621
@@ -37,7 +40,7 @@ app.mount("/static", StaticFiles(directory="src/frontend/static"), name="static"
 
 
 cognito_client = CognitoClient()
-
+dynamo_db_client = DynamoDBClient()
 
 def login_required(func):
     """
@@ -57,6 +60,8 @@ def login_required(func):
     return decorated_function
 
 
+### GET Endpoints ###
+
 @app.get("/", response_class=HTMLResponse)
 @login_required
 async def get_root(request: Request):
@@ -66,12 +71,14 @@ async def get_root(request: Request):
         {"request": request, "success_message": "Welcome "}
         )
 
+
 @app.get("/login", response_class=HTMLResponse)
 async def read_login(request: Request):
     """Displays the login page."""
     if request.cookies.get("session_token"):
         return RedirectResponse(url="/", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
     return templates.TemplateResponse("login.html", {"request": request})
+
 
 @app.get("/register", response_class=HTMLResponse)
 async def read_register(request: Request):
@@ -84,8 +91,28 @@ async def read_register(request: Request):
 @app.get("/medkit", response_class=HTMLResponse)
 @login_required
 async def get_medkit(request: Request):
-    """Displays the login page."""
-    return templates.TemplateResponse("medkit.html", {"request": request})
+    """Displays the medkit page with the list of medicines."""
+
+    token = request.cookies.get("session_token")
+    user_sub = cognito_client.get_current_user(token=token).get("user_sub")
+
+    medicine_list = await dynamo_db_client.get_medicines_by_user_sub(user_sub)
+
+    # Convert DynamoDB item format to a simpler format for the template
+    medicine = [
+        {
+            "medicine_name": item.get("medicine_name", {}).get("S", "Unknown"),
+            "medicine_type": item.get("medicine_type", {}).get("S", "Unknown"),
+            "quantity": item.get("quantity", {}).get("N", "0"),
+            "expiration_date": item.get("expiration_date", {}).get("S", "N/A"),
+            "medicine_id": item.get("medicine_id", {}).get("S", ""),
+        }
+        for item in medicine_list
+    ]
+
+    return templates.TemplateResponse(
+        "medkit.html", {"request": request, "medicines": medicine}
+    )
 
 
 @app.get("/about", response_class=HTMLResponse)
@@ -94,6 +121,8 @@ async def get_dosage(request: Request):
     """Displays the login page."""
     return templates.TemplateResponse("about.html", {"request": request})
 
+
+### POST Endpoints ###
 
 @app.post("/logout")
 async def logout() -> RedirectResponse:
@@ -128,7 +157,7 @@ async def submit_login(
 
         # Success
         if session_token := response.get("AuthenticationResult", {}).get("AccessToken"):
-            logger.info({"message": "Login successfull", "status_code": 302})
+            logger.info({"message": ".main(CognitoClient) - Login successful", "status_code": 200})
             redirect = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
             redirect.set_cookie(
                 key="session_token",
@@ -181,7 +210,7 @@ async def submit_register(
 
         # Success
         if response.get("UserSub"):
-            logger.info({"message": "User registered successfully", "status_code": 200})
+            logger.info({"message": ".main(CognitoClient) - User registered successfully", "status_code": 200})
             return templates.TemplateResponse(
                 "login.html",
                 {"request": request, "success_message": "Check your inbox to confirm an email address and log in!"},
@@ -206,6 +235,49 @@ async def submit_register(
     except Exception as e:
         return templates.TemplateResponse(
             "register.html",
+            {"request": request, "error_message": str(e)},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@app.post("/add_medicine", response_class=HTMLResponse)
+async def add_medicine(
+    request: Request,
+    medicine_name: str = Form(...),
+    medicine_type: str = Form(...),
+    quantity: int = Form(...),
+    expiration_date: str = Form(...),
+):
+    """Handles medicine form submition"""
+
+    token = request.cookies.get('session_token')
+    user_sub = cognito_client.get_current_user(token=token).get("user_sub")
+    try:
+        medicine_input = MedicineInput(
+            user_sub=user_sub,
+            medicine_name=medicine_name,
+            medicine_type=medicine_type,
+            quantity=quantity,
+            expiration_date=expiration_date,
+        )
+        await dynamo_db_client.insert_medicine(medicine_input)
+        logger.info({"message": ".main(DynamoDBClient) - Medicine data uploaded", "status_code": 200})
+        return RedirectResponse(url="/medkit", status_code=status.HTTP_303_SEE_OTHER)
+# TODO: Correct error handling
+    except ValidationError as val_err:
+        return templates.TemplateResponse(
+            "medkit.html",
+            {
+                "request": request,
+                "error_message": str(val_err.errors()[0]["msg"])
+                .replace("Value error, ", "")
+                .strip(),
+            },
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
+    except Exception as e:
+        return templates.TemplateResponse(
+            "medkit.html",
             {"request": request, "error_message": str(e)},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )

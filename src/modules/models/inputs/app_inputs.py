@@ -41,8 +41,8 @@ class MedicineInput(BaseModel):
     """Input model for medicine records"""
 
     user_sub: str
-    name: str
-    type: str
+    medicine_name: str
+    medicine_type: str
     quantity: int
     expiration_date: str
 

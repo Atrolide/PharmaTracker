@@ -75,13 +75,14 @@ class CognitoClient:
         except Exception as e:
             return {"error": str(e), "status_code": 500}
 
-    def get_current_user(self, token: str):
+    def get_current_user(self, token: str | None):
         """
         Validates access token. Returns current user
         """
         try:
             response = self.client.get_user(AccessToken=token)
-            return response
+            user_sub = response.get('Username')
+            return {"user_sub": user_sub}
         except self.client.exceptions.NotAuthorizedException:
             return {"error": "Not Authorized", "status_code": 401}
         except Exception as e:
