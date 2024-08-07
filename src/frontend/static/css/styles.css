@@ -12,7 +12,7 @@ body {
     color: #333;
 }
 
-/* Container */
+/* Main Container */
 .container {
     width: 95%;
     max-width: 1200px;
@@ -37,7 +37,10 @@ form {
 
 /* Inputs */
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="text"],
+input[type="number"],
+input[type="date"] {
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
@@ -49,11 +52,14 @@ input[type="password"] {
 }
 
 input[type="email"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus {
     border-color: #FFA500;
 }
 
-/* Button */
+/* Button Styles*/
 button {
     padding: 12px;
     background-color: #FF8C00;
@@ -64,6 +70,12 @@ button {
     font-weight: bold;
     font-size: 18px;
 }
+
+#add-medicine-button,
+#submit-medicine-button {
+    background-color: #13874f;
+}
+
 
 /* Navbar Styles */
 .navbar {
@@ -161,31 +173,6 @@ button {
     font-weight: bold;
 }
 
-#add-medicine-form input {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: #e4e8c8;
-    color: #000;
-    font-size: 18px;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-#add-medicine-form input:focus {
-    border-color: #FFA500;
-}
-
-#add-medicine-form button {
-    padding: 12px;
-    background-color: #13874f;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-    font-weight: bold;
-}
-
 /* Medicine List */
 #medicine-list {
     margin-top: 20px;
@@ -227,7 +214,7 @@ button {
 }
 
 /* Rotate the arrow when the checkbox is checked */
-.medicine-toggle:checked ~ .medicine-label .arrow {
+.medicine-toggle:checked~.medicine-label .arrow {
     transform: rotate(90deg);
 }
 
@@ -246,26 +233,27 @@ button {
 }
 
 
-
-
-/* Error Section */
-#error-section {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 10px;
-    color: #d3142d;
-    background-color: #cc8b93;
-    display: none;
-}
-
-/* Success Section */
+/* Error/Success Section Common styles */
+#error-section,
 #success-section {
     margin-top: 20px;
     padding: 15px;
     border-radius: 10px;
+
+    display: none;
+}
+
+/* Error Section */
+#error-section {
+    color: #d3142d;
+    background-color: #cc8b93;
+}
+
+/* Success Section */
+#success-section {
     color: #155724;
     background-color: #86c795;
-    display: none;
+
 }
 
 .error-message-present #error-section,
