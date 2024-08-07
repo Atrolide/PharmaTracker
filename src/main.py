@@ -42,21 +42,34 @@ app.mount("/static", StaticFiles(directory="src/frontend/static"), name="static"
 cognito_client = CognitoClient()
 dynamo_db_client = DynamoDBClient()
 
+
 def login_required(func):
     """
     Defines a decorator for protected routes
     """
+
     @wraps(func)
     async def decorated_function(*args, **kwargs):
-        request = kwargs.get('request')
+        request = kwargs.get("request")
         if not request:
-            return RedirectResponse(url="/login", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
-        token = request.cookies.get('session_token')
+            return RedirectResponse(
+                url="/login", status_code=status.HTTP_307_TEMPORARY_REDIRECT
+            )
+        token = request.cookies.get("session_token")
         if not token:
-            return RedirectResponse(url="/login", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
-        if 'error' in cognito_client.get_current_user(token=token):
-            return RedirectResponse(url="/login", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+            return RedirectResponse(
+                url="/login", status_code=status.HTTP_307_TEMPORARY_REDIRECT
+            )
+        if "error" in cognito_client.get_current_user(token=token):
+            redirect = RedirectResponse(
+                url="/login", status_code=status.HTTP_307_TEMPORARY_REDIRECT
+            )
+            redirect.delete_cookie(
+                key="session_token", httponly=True, samesite="strict"
+            )
+            return redirect
         return await func(*args, **kwargs)
+
     return decorated_function
 
 

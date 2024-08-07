@@ -223,12 +223,14 @@ button {
     display: inline-block;
     transition: transform 0.3s ease;
     margin-right: 10px;
+    transform-origin: center;
 }
 
 /* Rotate the arrow when the checkbox is checked */
-.medicine-toggle:checked+.medicine-label .arrow {
+.medicine-toggle:checked ~ .medicine-label .arrow {
     transform: rotate(90deg);
 }
+
 
 /* Details section */
 .medicine-details {
