@@ -23,6 +23,7 @@ body {
     box-shadow: 0 0 15px rgba(2, 240, 34, 0.329);
 }
 
+
 /* Heading */
 h2 {
     margin: 24px 0;
@@ -69,6 +70,23 @@ button {
     border-radius: 6px;
     font-weight: bold;
     font-size: 18px;
+}
+
+/* Container for Buttons */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#edit-button {
+    background-color: #2196F3;
+    font-size: 14px;
+}
+
+#delete-button {
+    background-color: #f44336;
+    font-size: 14px;
 }
 
 #add-medicine-button,
@@ -173,6 +191,7 @@ button {
     font-weight: bold;
 }
 
+
 /* Medicine List */
 #medicine-list {
     margin-top: 20px;
@@ -239,7 +258,6 @@ button {
     margin-top: 20px;
     padding: 15px;
     border-radius: 10px;
-
     display: none;
 }
 

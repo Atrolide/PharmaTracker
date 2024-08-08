@@ -35,7 +35,8 @@
         <main>
             <h2>My Medkit</h2>
             <!-- Add Medicine Button -->
-            <button id="add-medicine-button" onclick="document.getElementById('add-medicine-form').classList.toggle('hidden');">Add
+            <button id="add-medicine-button"
+                onclick="document.getElementById('add-medicine-form').classList.toggle('hidden');">Add
                 Medicine</button>
 
             <!-- Add Medicine Form -->
@@ -52,7 +53,7 @@
                 <label for="expiration-date">Expiration Date</label>
                 <input type="date" id="expiration-date" name="expiration_date" required>
 
-                <button id="submit-medicine-button"type="submit">Submit</button>
+                <button id="submit-medicine-button" type="submit">Submit</button>
             </form>
 
             <!-- Placeholder for list of medicines -->
@@ -69,16 +70,18 @@
                             <p><strong>Type:</strong> {{ medicine.medicine_type }}</p>
                             <p><strong>Quantity:</strong> {{ medicine.quantity }}</p>
                             <p><strong>Expiration Date:</strong> {{ medicine.expiration_date }}</p>
-                            <!-- Edit Form -->
-                            <form action="/edit_medicine" method="post" class="edit-form">
-                                <input type="hidden" name="medicine_id" value="{{ medicine.id }}">
-                                <button type="submit" class="edit-button">Edit</button>
-                            </form>
-                            <!-- Delete Form -->
-                            <form action="/delete_medicine" method="post" class="delete-form">
-                                <input type="hidden" name="medicine_id" value="{{ medicine.id }}">
-                                <button type="submit" class="delete-button">Delete</button>
-                            </form>
+                            <div class="button-container">
+                                <!-- Edit Form -->
+                                <form action="/edit_medicine" method="post" class="edit-form">
+                                    <input type="hidden" name="medicine_id" value="{{ medicine.id }}">
+                                    <button id="edit-button" type="submit">Edit</button>
+                                </form>
+                                <!-- Delete Form -->
+                                <form action="/delete_medicine" method="post" class="delete-form">
+                                    <input type="hidden" name="medicine_id" value="{{ medicine.id }}">
+                                    <button id="delete-button" type="submit">Delete</button>
+                                </form>
+                            </div>
                         </div>
                     </li>
                     {% endfor %}
