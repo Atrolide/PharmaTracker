@@ -73,12 +73,12 @@
                             <div class="button-container">
                                 <!-- Edit Form -->
                                 <form action="/edit_medicine" method="post" class="edit-form">
-                                    <input type="hidden" name="medicine_id" value="{{ medicine.id }}">
+                                    <input type="hidden" name="medicine_id" value="{{ medicine.medicine_id }}">
                                     <button id="edit-button" type="submit">Edit</button>
                                 </form>
                                 <!-- Delete Form -->
                                 <form action="/delete_medicine" method="post" class="delete-form">
-                                    <input type="hidden" name="medicine_id" value="{{ medicine.id }}">
+                                    <input type="hidden" name="medicine_id" value="{{ medicine.medicine_id }}">
                                     <button id="delete-button" type="submit">Delete</button>
                                 </form>
                             </div>

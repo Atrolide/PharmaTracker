@@ -122,7 +122,7 @@ async def get_medkit(request: Request):
         }
         for item in medicine_list
     ]
-
+    
     sorted_medicine = sorted(medicine, key=lambda x: x['medicine_name'].lower())
 
     return templates.TemplateResponse(
@@ -132,7 +132,7 @@ async def get_medkit(request: Request):
 
 @app.get("/about", response_class=HTMLResponse)
 @login_required
-async def get_dosage(request: Request):
+async def get_about(request: Request):
     """Displays the login page."""
     return templates.TemplateResponse("about.html", {"request": request})
 
@@ -293,6 +293,30 @@ async def add_medicine(
     except Exception as e:
         return templates.TemplateResponse(
             "medkit.html",
+            {"request": request, "error_message": str(e)},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@app.post("/delete_medicine", response_class=HTMLResponse)
+async def delete_medicine(
+    request: Request,
+    medicine_id: str = Form(...)
+):
+    """Deletes selected medicine record"""
+    token = request.cookies.get('session_token')
+    user_sub = cognito_client.get_current_user(token=token).get("user_sub")
+    try:
+        await dynamo_db_client.delete_medicine(user_sub, medicine_id)
+        logger.info({"message": ".main(DynamoDBClient) - Medicine record deleted", "status_code": 200})
+        return RedirectResponse(url="/medkit", status_code=status.HTTP_303_SEE_OTHER)
+    except ValidationError as val_err:
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error_message": str(val_err.errors()[0]["msg"]).replace("Value error, ", "").strip()},
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+    except Exception as e:
+        return templates.TemplateResponse(
+            "register.html",
             {"request": request, "error_message": str(e)},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
