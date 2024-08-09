@@ -14,7 +14,6 @@
     <div class="container">
         <header>
             <nav class="navbar">
-                <!-- Hidden checkbox for controlling dropdown visibility -->
                 <input type="checkbox" id="navbar-toggle" class="navbar-toggle-checkbox">
                 <label for="navbar-toggle" class="navbar-toggle">
                     <span class="navbar-toggle-icon"></span>
@@ -34,12 +33,9 @@
 
         <main>
             <h2>My Medkit</h2>
-            <!-- Add Medicine Button -->
             <button id="add-medicine-button"
-                onclick="document.getElementById('add-medicine-form').classList.toggle('hidden');">Add
-                Medicine</button>
+                onclick="document.getElementById('add-medicine-form').classList.toggle('hidden');">Add Medicine</button>
 
-            <!-- Add Medicine Form -->
             <form id="add-medicine-form" action="/add_medicine" method="post" class="hidden">
                 <label for="medicine-name">Medicine Name</label>
                 <input type="text" id="medicine-name" name="medicine_name" required>
@@ -56,33 +52,60 @@
                 <button id="submit-medicine-button" type="submit">Submit</button>
             </form>
 
-            <!-- Placeholder for list of medicines -->
             <div id="medicine-list">
                 {% if medicines %}
                 <ul>
                     {% for medicine in medicines %}
                     <li class="medicine-item">
+                        <!-- Checkbox for medicine details -->
                         <input type="checkbox" id="toggle-{{ loop.index }}" class="medicine-toggle">
+                        <!-- Medicine Label for Details Toggle -->
                         <label for="toggle-{{ loop.index }}" class="medicine-label">
                             <span class="arrow">></span> {{ medicine.medicine_name }}
                         </label>
+
+                        <!-- Medicine Details -->
                         <div class="medicine-details">
                             <p><strong>Type:</strong> {{ medicine.medicine_type }}</p>
                             <p><strong>Quantity:</strong> {{ medicine.quantity }}</p>
                             <p><strong>Expiration Date:</strong> {{ medicine.expiration_date }}</p>
+
+                            <!-- Button Container -->
                             <div class="button-container">
-                                <!-- Edit Form -->
-                                <form action="/edit_medicine" method="post" class="edit-form">
-                                    <input type="hidden" name="medicine_id" value="{{ medicine.medicine_id }}">
-                                    <button id="edit-button" type="submit">Edit</button>
-                                </form>
+                                <!-- Edit Button -->
+                                <button type="button" id="edit-button"
+                                    onclick="document.getElementById('edit-medicine-form-{{ loop.index }}').classList.toggle('hidden');">Edit</button>
+
                                 <!-- Delete Form -->
                                 <form action="/delete_medicine" method="post" class="delete-form">
                                     <input type="hidden" name="medicine_id" value="{{ medicine.medicine_id }}">
                                     <button id="delete-button" type="submit">Delete</button>
                                 </form>
                             </div>
+                            <!-- Edit Medicine Form -->
+                            <form id="edit-medicine-form-{{ loop.index }}" action="/edit_medicine" method="post"
+                                class="hidden">
+                                <input type="hidden" name="medicine_id" value="{{ medicine.medicine_id }}">
+                                <label for="edit-medicine-name-{{ loop.index }}">Medicine Name</label>
+                                <input type="text" id="edit-medicine-name-{{ loop.index }}" name="medicine_name"
+                                    value="{{ medicine.medicine_name }}">
+
+                                <label for="edit-medicine-type-{{ loop.index }}">Type</label>
+                                <input type="text" id="edit-medicine-type-{{ loop.index }}" name="medicine_type"
+                                    value="{{ medicine.medicine_type }}">
+
+                                <label for="edit-quantity-{{ loop.index }}">Quantity</label>
+                                <input type="number" id="edit-quantity-{{ loop.index }}" name="quantity"
+                                    value="{{ medicine.quantity }}">
+
+                                <label for="edit-expiration-date-{{ loop.index }}">Expiration Date</label>
+                                <input type="date" id="edit-expiration-date-{{ loop.index }}" name="expiration_date"
+                                    value="{{ medicine.expiration_date }}">
+
+                                <button id="submit-medicine-button" type="submit">Save</button>
+                            </form>
                         </div>
+
                     </li>
                     {% endfor %}
                 </ul>

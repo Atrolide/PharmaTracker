@@ -171,8 +171,9 @@ button {
 }
 
 
-/* Add Medicine Form */
-#add-medicine-form {
+/* Add/Edit Medicine Forms */
+#add-medicine-form,
+[id^="edit-medicine-form-"] {
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -183,11 +184,13 @@ button {
     background-color: #f9f9f9;
 }
 
-#add-medicine-form.hidden {
+#add-medicine-form.hidden,
+[id^="edit-medicine-form-"].hidden {
     display: none;
 }
 
-#add-medicine-form label {
+#add-medicine-form label,
+[id^="edit-medicine-form-"] label {
     font-weight: bold;
 }
 
@@ -249,6 +252,26 @@ button {
 /* Show details when checkbox is checked */
 .medicine-toggle:checked~.medicine-details {
     display: block;
+}
+
+/* Edit Medicine Form */
+.edit-medicine-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+}
+
+.edit-medicine-form.hidden {
+    display: none;
+}
+
+.edit-medicine-form label {
+    font-weight: bold;
 }
 
 
