@@ -254,26 +254,6 @@ button {
     display: block;
 }
 
-/* Edit Medicine Form */
-.edit-medicine-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 20px;
-    margin: 20px 0;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: #f9f9f9;
-}
-
-.edit-medicine-form.hidden {
-    display: none;
-}
-
-.edit-medicine-form label {
-    font-weight: bold;
-}
-
 
 /* Error/Success Section Common styles */
 #error-section,
