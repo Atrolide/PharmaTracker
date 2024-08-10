@@ -1,11 +1,12 @@
 """AWS Cognito Client class"""
 
 import uuid
+from typing import List
 
 from boto3.session import Session
 
 from src.modules.config.aws_settings import DynamoDBSettings
-from src.modules.models.inputs.app_inputs import MedicineInput
+from src.modules.models.inputs.app_inputs import MedicineInput, UpdateMedicineInput
 
 
 class DynamoDBClient:
@@ -68,5 +69,47 @@ class DynamoDBClient:
             # Delete the item from the DynamoDB table
             response = self.client.delete_item(TableName=self.table_name, Key=key)
             return response
+        except Exception as e:
+            return {"error": str(e), "status_code": 500}
+
+    async def edit_medicine(
+    self,
+    update_medicine_input: UpdateMedicineInput,
+    ):
+        """Edit a medicine record in the DynamoDB table"""
+        try:
+            # Initialize update expression components
+            update_expression_parts: List[str] = []
+            expression_attribute_values = {}
+
+            # Directly map fields to the update expression
+            field_map = {
+                "medicine_name": "S",
+                "medicine_type": "S",
+                "quantity": "N",
+                "expiration_date": "S",
+            }
+
+            for field, dynamo_type in field_map.items():
+                value = getattr(update_medicine_input, field)
+                update_expression_parts.append(f"{field} = :{field}")
+                expression_attribute_values[f":{field}"] = {dynamo_type: str(value)}
+
+            # Join the update expression parts into a single string
+            update_expression = "SET " + ", ".join(update_expression_parts)
+
+            # Perform the update operation using DynamoDB API
+            response = self.client.update_item(
+                TableName=self.table_name,
+                Key={
+                    "user_sub": {"S": update_medicine_input.user_sub},
+                    "medicine_id": {"S": update_medicine_input.medicine_id}
+                },
+                UpdateExpression=update_expression,
+                ExpressionAttributeValues=expression_attribute_values,
+            )
+
+            return response
+
         except Exception as e:
             return {"error": str(e), "status_code": 500}

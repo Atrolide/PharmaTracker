@@ -4,6 +4,7 @@
 import logging
 from contextlib import asynccontextmanager
 from functools import wraps
+from typing import Optional
 
 # FastAPI
 from fastapi import FastAPI, Request, Form, status
@@ -15,7 +16,12 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import ValidationError
 
 # Internal
-from src.modules.models.inputs.app_inputs import LoginInput, RegisterInput, MedicineInput
+from src.modules.models.inputs.app_inputs import (
+    LoginInput,
+    RegisterInput,
+    MedicineInput,
+    UpdateMedicineInput,
+)
 from src.modules.services.aws.cognito_service import CognitoClient
 from src.modules.services.aws.dynamodb_service import DynamoDBClient
 
@@ -317,6 +323,51 @@ async def delete_medicine(
     except Exception as e:
         return templates.TemplateResponse(
             "register.html",
+            {"request": request, "error_message": str(e)},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@app.post("/edit_medicine", response_class=HTMLResponse)
+async def edit_medicine(
+    request: Request,
+    medicine_id: str = Form(...),
+    medicine_name: str = Form(...),
+    medicine_type: str = Form(...),
+    quantity: int = Form(...),
+    expiration_date: str = Form(...)
+):
+    """Handles edit medicine form submition"""
+
+    token = request.cookies.get('session_token')
+    user_sub = cognito_client.get_current_user(token=token).get("user_sub")
+    try:
+        update_medicine_input = UpdateMedicineInput(
+            medicine_id=medicine_id,
+            user_sub=user_sub,
+            medicine_name=medicine_name,
+            medicine_type=medicine_type,
+            quantity=quantity,
+            expiration_date=expiration_date
+        )
+        await dynamo_db_client.edit_medicine(update_medicine_input)
+        logger.info({"message": f".main(DynamoDBClient) - Medicine data edited{update_medicine_input}", "status_code": 200})
+        return RedirectResponse(url="/medkit", status_code=status.HTTP_303_SEE_OTHER)
+# TODO: Correct error handling
+    except ValidationError as val_err:
+        return templates.TemplateResponse(
+            "medkit.html",
+            {
+                "request": request,
+                "error_message": str(val_err.errors()[0]["msg"])
+                .replace("Value error, ", "")
+                .strip(),
+            },
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
+    except Exception as e:
+        return templates.TemplateResponse(
+            "medkit.html",
             {"request": request, "error_message": str(e)},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
