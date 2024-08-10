@@ -4,7 +4,7 @@
 import logging
 from contextlib import asynccontextmanager
 from functools import wraps
-from typing import Optional
+from datetime import datetime
 
 # FastAPI
 from fastapi import FastAPI, Request, Form, status
@@ -117,7 +117,15 @@ async def get_medkit(request: Request):
 
     medicine_list = await dynamo_db_client.get_medicines_by_user_sub(user_sub)
 
-    # Convert DynamoDB item format to a simpler format for the template
+    def parse_date(date_str):
+        try:
+            return datetime.strptime(date_str, "%Y-%m").date().replace(day=1)
+        except ValueError:
+            return None
+
+    today = datetime.now().date().replace(day=1)  # Get today's date
+
+    # Add `is_expired` field to each medicine item
     medicine = [
         {
             "medicine_name": item.get("medicine_name", {}).get("S", "Unknown"),
@@ -125,6 +133,7 @@ async def get_medkit(request: Request):
             "quantity": item.get("quantity", {}).get("N", "0"),
             "expiration_date": item.get("expiration_date", {}).get("S", "N/A"),
             "medicine_id": item.get("medicine_id", {}).get("S", ""),
+            "is_expired": parse_date(item.get("expiration_date", {}).get("S", "N/A")) < today  # Compare dates
         }
         for item in medicine_list
     ]
@@ -134,6 +143,7 @@ async def get_medkit(request: Request):
     return templates.TemplateResponse(
         "medkit.html", {"request": request, "medicines": sorted_medicine}
     )
+
 
 
 @app.get("/about", response_class=HTMLResponse)
@@ -351,7 +361,7 @@ async def edit_medicine(
             expiration_date=expiration_date
         )
         await dynamo_db_client.edit_medicine(update_medicine_input)
-        logger.info({"message": f".main(DynamoDBClient) - Medicine data edited{update_medicine_input}", "status_code": 200})
+        logger.info({"message": ".main(DynamoDBClient) - Medicine data edited", "status_code": 200})
         return RedirectResponse(url="/medkit", status_code=status.HTTP_303_SEE_OTHER)
 # TODO: Correct error handling
     except ValidationError as val_err:

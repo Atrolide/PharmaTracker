@@ -47,7 +47,7 @@
                 <input type="number" id="quantity" name="quantity" required>
 
                 <label for="expiration-date">Expiration Date</label>
-                <input type="date" id="expiration-date" name="expiration_date" required>
+                <input type="month" id="expiration-date" name="expiration_date" required>
 
                 <button id="submit-medicine-button" type="submit">Submit</button>
             </form>
@@ -68,7 +68,11 @@
                         <div class="medicine-details">
                             <p><strong>Type:</strong> {{ medicine.medicine_type }}</p>
                             <p><strong>Quantity:</strong> {{ medicine.quantity }}</p>
-                            <p><strong>Expiration Date:</strong> {{ medicine.expiration_date }}</p>
+                            <!-- Added conditional class and text based on `is_expired` -->
+                            <p class="{{ 'expired' if medicine.is_expired else '' }}"> <!-- New line -->
+                                <strong>Expiration Date:</strong> {{ medicine.expiration_date }}
+                                {% if medicine.is_expired %}<span>(Expired)</span>{% endif %} <!-- New line -->
+                            </p>
 
                             <!-- Button Container -->
                             <div class="button-container">
@@ -99,13 +103,12 @@
                                     value="{{ medicine.quantity }}">
 
                                 <label for="edit-expiration-date-{{ loop.index }}">Expiration Date</label>
-                                <input type="date" id="edit-expiration-date-{{ loop.index }}" name="expiration_date"
+                                <input type="month" id="edit-expiration-date-{{ loop.index }}" name="expiration_date"
                                     value="{{ medicine.expiration_date }}">
 
                                 <button id="submit-medicine-button" type="submit">Save</button>
                             </form>
                         </div>
-
                     </li>
                     {% endfor %}
                 </ul>
@@ -113,6 +116,7 @@
                 <p>Medkit empty.</p>
                 {% endif %}
             </div>
+
         </main>
     </div>
 </body>
