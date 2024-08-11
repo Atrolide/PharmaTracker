@@ -15,3 +15,22 @@ module "tablets_table" {
   table_name = "MedicineTable-${var.env}"
   tag        = var.tag
 }
+
+module "pharma_tracker_repo" {
+  source    = "./modules/ecr"
+  repo_name = "pharmatracker-${var.env}"
+  tag       = var.tag
+}
+
+module "ecs_sg" {
+  source  = "./modules/ecs_sg"
+  sg_name = "ecs-sg-pharmatracker-${var.env}"
+  vpc_id  = var.vpc_id
+  tag     = var.tag
+}
+
+module "ecs_cluster" {
+  source       = "./modules/ecs_cluster"
+  cluster_name = "pharmatracker-${var.env}"
+  tag          = var.tag
+}

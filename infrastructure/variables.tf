@@ -24,3 +24,8 @@ variable "tag" {
   description = "Default resource tag"
   default     = "Thesis"
 }
+
+variable "vpc_id" {
+  type        = string
+  description = "VPC ID for ECS SG"
+}
