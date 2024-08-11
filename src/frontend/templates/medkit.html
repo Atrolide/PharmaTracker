@@ -69,9 +69,9 @@
                             <p><strong>Type:</strong> {{ medicine.medicine_type }}</p>
                             <p><strong>Quantity:</strong> {{ medicine.quantity }}</p>
                             <!-- Added conditional class and text based on `is_expired` -->
-                            <p class="{{ 'expired' if medicine.is_expired else '' }}"> <!-- New line -->
+                            <p class="{{ 'expired' if medicine.is_expired else '' }}">
                                 <strong>Expiration Date:</strong> {{ medicine.expiration_date }}
-                                {% if medicine.is_expired %}<span>(Expired)</span>{% endif %} <!-- New line -->
+                                {% if medicine.is_expired %}<span>(Expired)</span>{% endif %}
                             </p>
 
                             <!-- Button Container -->

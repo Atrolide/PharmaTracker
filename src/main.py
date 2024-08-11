@@ -125,7 +125,6 @@ async def get_medkit(request: Request):
 
     today = datetime.now().date().replace(day=1)  # Get today's date
 
-    # Add `is_expired` field to each medicine item
     medicine = [
         {
             "medicine_name": item.get("medicine_name", {}).get("S", "Unknown"),

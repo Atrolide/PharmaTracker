@@ -1,7 +1,6 @@
 """Module for app inputs"""
 
 import re
-from typing import Optional
 from pydantic import BaseModel, model_validator
 
 
