@@ -50,7 +50,7 @@ class MedicineInput(BaseModel):
     def check_exp_date_regex(self) -> "MedicineInput":
         """Model validator for expiration date format"""
         if not re.match(r"^\d{4}-\d{2}$", self.expiration_date):
-            raise ValueError("Expiration date must be in 'YYYY-MM-DD' format.")
+            raise ValueError("Expiration date must be in 'YYYY-MM' format.")
         return self
 
 
