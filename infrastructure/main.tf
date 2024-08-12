@@ -18,31 +18,32 @@ module "tablets_table" {
 
 module "pharma_tracker_repo" {
   source    = "./modules/ecr"
-  repo_name = "pharmatracker-${var.env}"
+  repo_name = local.prefix
   tag       = var.tag
 }
 
 module "ecs_sg" {
   source  = "./modules/ecs_sg"
-  sg_name = "ecs-sg-pharmatracker-${var.env}"
+  sg_name = "ecs-sg-${local.prefix}"
   vpc_id  = var.vpc_id
   tag     = var.tag
 }
 
 module "ecs_iam" {
   source       = "./modules/ecs_iam"
-  project_name = "pharmatracker-${var.env}"
+  project_name = "role-${local.prefix}"
   tag          = var.tag
 }
 
 module "ecs_cluster" {
   source             = "./modules/ecs_cluster"
-  cluster_name       = "pharmatracker-${var.env}"
-  task_family        = "pharmatracker-${var.env}"
+  cluster_name       = "cluster-${local.prefix}"
+  task_family        = "task-${local.prefix}"
   image              = local.image
   tag                = var.tag
   execution_role_arn = module.ecs_iam.execution_role_arn
   security_groups    = [module.ecs_sg.ecs_sg_id]
   subnets            = var.subnets
   task_count         = var.task_count
+  depends_on         = [module.pharma_tracker_repo, module.ecs_iam, module.ecs_sg, module.tablets_table, module.pharma_tracker_pool]
 }
