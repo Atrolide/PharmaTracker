@@ -29,8 +29,20 @@ module "ecs_sg" {
   tag     = var.tag
 }
 
-module "ecs_cluster" {
-  source       = "./modules/ecs_cluster"
-  cluster_name = "pharmatracker-${var.env}"
+module "ecs_iam" {
+  source       = "./modules/ecs_iam"
+  project_name = "pharmatracker-${var.env}"
   tag          = var.tag
+}
+
+module "ecs_cluster" {
+  source             = "./modules/ecs_cluster"
+  cluster_name       = "pharmatracker-${var.env}"
+  task_family        = "pharmatracker-${var.env}"
+  image              = local.image
+  tag                = var.tag
+  execution_role_arn = module.ecs_iam.execution_role_arn
+  security_groups    = [module.ecs_sg.ecs_sg_id]
+  subnets            = var.subnets
+  task_count         = var.task_count
 }
