@@ -13,3 +13,4 @@ terraform init -reconfigure -backend-config=environment/public/dev/backend/backe
 terraform plan -var-file=environment/public/dev/variables/variables_dev.tfvars
 
 terraform apply -var-file=environment/public/dev/variables/variables_dev.tfvars
+
